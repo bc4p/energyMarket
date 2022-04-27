@@ -9,3 +9,6 @@ class EnergyToken():
 
         def __repr__(self):
             return self.energyToken.__repr__()
+
+        def balanceOf(self, address):
+            return self.energyToken.balanceOf(address, 1)

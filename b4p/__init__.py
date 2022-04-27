@@ -18,13 +18,13 @@ def init():
     network.connect('mainnet-fork')
     
 
-    EURS = config["networks"][network.show_active()].get("eurs")
+    EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs"))
     zero_address = "0x0000000000000000000000000000000000000000"
     url = "https://exampleURL.com"
     from .energyToken import EnergyToken
-    from .market import Market
-    from .producingAsset import ProducingAsset
-    from .consumingAsset import ConsumingAsset
+    from .market import Markets
+    from .producingAsset import ProducingAssets
+    from .consumingAsset import ConsumingAssets
 
     from .accounts import Accounts
     from .registry import Registry
@@ -34,9 +34,9 @@ def init():
     globals()["Accounts"] = Accounts()
     globals()["EnergyToken"] = EnergyToken()
     globals()["Registry"] = Registry()
-    globals()["Market"] = Market()
-    globals()["ProducingAsset"] = ProducingAsset()
-    globals()["ConsumingAsset"] = ProducingAsset()
+    globals()["Markets"] = Markets()
+    globals()["ProducingAssets"] = ProducingAssets()
+    globals()["ConsumingAssets"] = ConsumingAssets()
 
     
 
