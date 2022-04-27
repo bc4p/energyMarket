@@ -1,0 +1,6 @@
+[submodule "b4p-contracts"]
+	path = b4p-contracts
+	url = https://github.com/BC4P/b4p-contracts.git
+[submodule "b4p/b4p-contracts"]
+	path = b4p/b4p-contracts
+	url = https://github.com/BC4P/b4p-contracts.git
