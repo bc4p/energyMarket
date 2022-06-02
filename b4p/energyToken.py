@@ -1,8 +1,8 @@
-import b4p
-
+from . import url, p
 class EnergyToken():
         def __init__(self):
-            self.energyToken = b4p.p.EnergyToken.deploy(b4p.url, {"from": b4p.Accounts["admin"]})
+            from . import Accounts
+            self.energyToken = p.EnergyToken.deploy(url, {"from": Accounts["admin"]})
 
         def __str__(self):
             return self.energyToken.__str__()

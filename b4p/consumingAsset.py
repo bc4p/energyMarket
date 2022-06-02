@@ -1,26 +1,28 @@
-import b4p
+from . import p, EURS
 
 class ConsumingAssets():
     def __init__(self):
-        self.consumingAssetContract = b4p.p.ConsumingAsset
+        self.consumingAssetContract = p.ConsumingAsset
         self.consumingAssets = {}
 
     def new(self,assetName, accountName, market1):
-        market = b4p.Markets[market1]
-        account = b4p.Accounts[accountName]
-        ca = self.consumingAssetContract.deploy(market, b4p.Registry, {"from": account})
+        from . import Markets, Registry, Accounts
+        market = Markets[market1]
+        account = Accounts[accountName]
+        ca = self.consumingAssetContract.deploy(market, Registry, {"from": account})
         self.consumingAssets[assetName] = ConsumingAsset(ca,account)
         return self.consumingAssets[assetName]
 
     def __getitem__(self, name):
-        return self.consumingAssets[name]
-
+        if name in self.consumingAssets:
+            return self.consumingAssets[name]
+        return False
 
 
 class ConsumingAsset():
     def __init__(self, asset, owner):
         self.asset = asset
-        b4p.EURS.transfer(self.asset, 1000, {"from": b4p.EURS})
+        EURS.transfer(self.asset, 1000, {"from": EURS})
         self.owner = owner
 
     def __str__(self):
@@ -34,8 +36,9 @@ class ConsumingAsset():
         tx.wait(1)
     
     def balanceEURS(self):
-        return b4p.EURS.balanceOf(self.asset)
+        return EURS.balanceOf(self.asset)
 
     def balanceEnergyToken(self):
-        return b4p.EnergyToken.balanceOf(self.asset)
+        from . import EnergyToken
+        return EnergyToken.balanceOf(self.asset)
 

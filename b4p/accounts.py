@@ -1,4 +1,4 @@
-import b4p
+from . import EURS
 from brownie.network import accounts
 
 
@@ -10,7 +10,9 @@ class Accounts():
         pass
 
     def __getitem__(self, name):
-        return self.accounts[name]
+        if name in self.accounts:
+            return self.accounts[name]
+        return False
 
 
     def new(self, name):
@@ -36,10 +38,11 @@ class Account():
         return self.account.transfer(*args, **kwargs)
 
     def balanceEURS(self):
-        return b4p.EURS.balanceOf(self.account)
+        return EURS.balanceOf(self.account)
 
     def balanceEnergyToken(self):
-        return b4p.EnergyToken.balanceOf(self.account)
+        from . import EnergyToken
+        return EnergyToken.balanceOf(self.account)
 
 
 
