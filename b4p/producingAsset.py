@@ -1,19 +1,22 @@
-import b4p
-
+from . import p, EURS
 class ProducingAssets():
     def __init__(self):
-        self.producingAssetContract = b4p.p.ProducingAsset
+        self.producingAssetContract = p.ProducingAsset
         self.produducingAssets = {}
 
     def new(self,assetName, accountName, market2):
-        market = b4p.Markets[market2]
-        account = b4p.Accounts[accountName]
-        pa = self.producingAssetContract.deploy(market, b4p.Registry, {"from": account})
+        from . import Markets, Accounts, Registry
+
+        market = Markets[market2]
+        account = Accounts[accountName]
+        pa = self.producingAssetContract.deploy(market, Registry, {"from": account})
         self.produducingAssets[assetName] = ProducingAsset(pa, account)
         return self.produducingAssets[assetName]
 
     def __getitem__(self, name):
-        return self.produducingAssets[name]
+        if name in self.produducingAssets:
+            return self.produducingAssets[name]
+        return False
 
 
 
@@ -34,10 +37,11 @@ class ProducingAsset():
         tx.wait(1)
     
     def balanceEURS(self):
-        return b4p.EURS.balanceOf(self.asset)
+        return EURS.balanceOf(self.asset)
 
     def balanceEnergyToken(self):
-        return b4p.EnergyToken.balanceOf(self.asset)
+        from . import EnergyToken
+        return EnergyToken.balanceOf(self.asset)
 
 
 
