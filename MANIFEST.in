@@ -1,1 +1,1 @@
-recursive-include b4p *:sol
+recursive-include docs *
