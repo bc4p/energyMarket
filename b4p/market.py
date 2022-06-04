@@ -1,25 +1,30 @@
 from collections import Counter
-import b4p
+from . import p, zero_address, EURS
 
 class Markets():
-    def __init__(self):
-        self.marketContract = b4p.p.Market
-        self.markets = {}
-        self.markets[b4p.zero_address] = b4p.zero_address
 
-    def new(self, nameMarket, nameAccount, fee=0, connection1=b4p.zero_address, connection2=b4p.zero_address):
-        account = b4p.Accounts[nameAccount]
-        market = self.marketContract.deploy(b4p.EURS,b4p.EnergyToken, connection1, connection2, b4p.Registry, fee, {"from": account})
+    def __init__(self):
+        self.marketContract = p.Market
+        self.markets = {}
+        self.markets[ zero_address] =  zero_address
+
+    def new(self, nameMarket, nameAccount, fee=0, connection1= zero_address, connection2= zero_address):
+        from . import EnergyToken, Registry, Accounts
+        account =  Accounts[nameAccount]
+        market = self.marketContract.deploy( EURS, EnergyToken, connection1, connection2,  Registry, fee, {"from": account})
         self.markets[nameMarket] = Market(market, account)
         return self.markets[nameMarket]
 
     def __getitem__(self, name):
-        return self.markets[name]
+        if name in self.markets:
+            return self.markets[name]
+        return False
 
 class Market():
     def __init__(self, market, account):
+
         self.market = market
-        b4p.EURS.transfer(self.market, 1000, {"from": b4p.EURS})
+        EURS.transfer(self.market, 1000, {"from":  EURS})
         self.owner = account
 
     def __str__(self):
@@ -28,8 +33,9 @@ class Market():
     def __repr__(self):
         return self.market.__repr__()
 
-    def setConnections(self, nameMarket1=b4p.zero_address, nameMarket2=b4p.zero_address):
-        tx = self.market.setMarkets(b4p.Markets[nameMarket1], b4p.Markets[nameMarket2], {"from": self.owner})
+    def setConnections(self, nameMarket1= zero_address, nameMarket2= zero_address):
+
+        tx = self.market.setMarkets( Markets[nameMarket1],  Markets[nameMarket2], {"from": self.owner})
         tx.wait(1)
 
     def forwardOffer(self, id):
@@ -42,10 +48,11 @@ class Market():
         print(tx.call_trace())
 
     def balanceEURS(self):
-        return b4p.EURS.balanceOf(self.market)
+        return  EURS.balanceOf(self.market)
 
     def balanceEnergyToken(self):
-        return b4p.EnergyToken.balanceOf(self.market)
+        from . import EnergyToken
+        return EnergyToken.balanceOf(self.market)
 
     
 

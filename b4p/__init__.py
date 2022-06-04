@@ -12,7 +12,8 @@ def init():
     global EURS
 
     has_started = True
-    project_path = os.path.dirname(os.path.realpath(__file__))+"\\b4p-contracts"
+
+    project_path = os.path.dirname(os.path.realpath(__file__))+"/b4p-contracts"
     p = project.load(project_path)
     p.load_config()
     network.connect('mainnet-fork')
@@ -21,15 +22,13 @@ def init():
     EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs"))
     zero_address = "0x0000000000000000000000000000000000000000"
     url = "https://exampleURL.com"
+    from .accounts import Accounts
     from .energyToken import EnergyToken
     from .market import Markets
     from .producingAsset import ProducingAssets
     from .consumingAsset import ConsumingAssets
 
-    from .accounts import Accounts
     from .registry import Registry
-
-
 
     globals()["Accounts"] = Accounts()
     globals()["EnergyToken"] = EnergyToken()

@@ -1,9 +1,9 @@
-
-import b4p
+from . import p
 class Registry():
 
     def __init__(self):
-        self.registry = b4p.p.MarketRegistry.deploy({"from": b4p.Accounts["admin"]})
+        from . import Accounts
+        self.registry = p.MarketRegistry.deploy({"from": Accounts["admin"]})
         print(self.registry)
 
 
