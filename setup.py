@@ -26,4 +26,5 @@ setup(
     package_data={},
     install_requires=REQUIREMENTS,
     zip_safe=False,
+    include_package_data=True
 )
