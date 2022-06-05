@@ -10,6 +10,7 @@ class ConsumingAssets():
         market = Markets[market1]
         account = Accounts[accountName]
         ca = self.consumingAssetContract.deploy(market, Registry, {"from": account})
+        EURS.transfer(ca, 1000, {"from":EURS})
         self.consumingAssets[assetName] = ConsumingAsset(ca,account)
         return self.consumingAssets[assetName]
 

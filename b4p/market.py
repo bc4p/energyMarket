@@ -10,6 +10,7 @@ class Markets():
 
     def new(self, nameMarket, nameAccount, fee=0, connection1= zero_address, connection2= zero_address):
         from . import EnergyToken, Registry, Accounts
+        #TODO: check if account exists before deploying the market
         account =  Accounts[nameAccount]
         market = self.marketContract.deploy( EURS, EnergyToken, connection1, connection2,  Registry, fee, {"from": account})
         self.markets[nameMarket] = Market(market, account)
@@ -22,7 +23,6 @@ class Markets():
 
 class Market():
     def __init__(self, market, account):
-
         self.market = market
         EURS.transfer(self.market, 1000, {"from":  EURS})
         self.owner = account
@@ -34,8 +34,9 @@ class Market():
         return self.market.__repr__()
 
     def setConnections(self, nameMarket1= zero_address, nameMarket2= zero_address):
+        import b4p
 
-        tx = self.market.setMarkets( Markets[nameMarket1],  Markets[nameMarket2], {"from": self.owner})
+        tx = self.market.setMarkets(b4p.Markets[nameMarket1], b4p.Markets[nameMarket2], {"from": self.owner})
         tx.wait(1)
 
     def forwardOffer(self, id):

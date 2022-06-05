@@ -6,6 +6,7 @@ class Accounts():
     def __init__(self):
         self.accounts = {}
         self.accounts["admin"] = Account(accounts[0])
+        EURS.transfer(self.accounts["admin"], 1000, {"from":  EURS})
         self.counter = 1
         pass
 
@@ -18,6 +19,7 @@ class Accounts():
     def new(self, name):
         self.accounts[name] = Account(accounts[self.counter])
         self.counter += 1
+        EURS.transfer(self.accounts[name], 1000, {"from":  EURS})
         return self.accounts[name]
 
 class Account():

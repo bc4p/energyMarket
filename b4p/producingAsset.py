@@ -10,6 +10,8 @@ class ProducingAssets():
         market = Markets[market2]
         account = Accounts[accountName]
         pa = self.producingAssetContract.deploy(market, Registry, {"from": account})
+        EURS.transfer(pa, 1000, {"from":EURS})
+
         self.produducingAssets[assetName] = ProducingAsset(pa, account)
         return self.produducingAssets[assetName]
 
