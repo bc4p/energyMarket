@@ -20,5 +20,5 @@ pip install .
 
 ## use
 
-see the [tutorial notebook](tutorial.ipynb) to get familari with the main functionalities fo the package
+see the [tutorial notebook](tutorial.ipynb) to get familari with the main functionalities of the package
 
