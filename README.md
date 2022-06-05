@@ -18,6 +18,7 @@ pip install .
 
 :warning:if the .env values are changed the package needs to be reinstalled with the command above:warning:
 
+## use
 
-
+see the [tutorial notebook](tutorial.ipynb) to get familari with the main functionalities fo the package
 
