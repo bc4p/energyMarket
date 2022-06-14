@@ -1,4 +1,4 @@
-from brownie import *
+from brownie import network, project, Contract
 import sys, os
 
 
