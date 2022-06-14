@@ -1,1 +1,1 @@
-brownie
+eth-brownie
