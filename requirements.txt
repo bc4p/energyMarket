@@ -1,1 +1,1 @@
-eth-brownie==1.16.1
+-e git+https://github.com/pietro99/brownie.git@master#egg=brownie
