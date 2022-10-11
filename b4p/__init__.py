@@ -1,4 +1,4 @@
-from brownie import network, project, Contract
+from brownie import network, project, Contract, config
 import sys, os
 
 
