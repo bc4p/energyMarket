@@ -1,1 +1,1 @@
--e git+https://github.com/pietro99/brownie.git@master#egg=brownie
+eth-brownie
