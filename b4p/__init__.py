@@ -1,5 +1,5 @@
 from brownie import network, project, Contract, config
-import sys, os
+import sys, os, json
 
 
 has_started = False
@@ -18,8 +18,12 @@ def init():
     p.load_config()
     network.connect('bc4p-mainnet')
     
+    with open(os.path.dirname(os.path.realpath(__file__))+'/EURS.abi', 'r') as abi_file:
+        eurs_abi_data = json.load(abi_file)
 
-    EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs"))
+    #EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs"))
+    EURS = Contract.from_abi("EURSToken", "0xE3feb6eBB7d0B8d0721fEE4842fAE7668259be6e", eurs_abi_data)
+
     zero_address = "0x0000000000000000000000000000000000000000"
     url = "https://exampleURL.com"
     from .accounts import Accounts

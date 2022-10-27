@@ -36,8 +36,14 @@ This repository relies on brownie and to be able to connect it to the BC4P netwo
 
 ```bash
 brownie networks add BC4P bc4p-mainnet host="https://bc4p.nowum.fh-aachen.de/blockchain" chainid=123321 explorer="https://bc4p.nowum.fh-aachen.de/explorer/api"
+brownie account generate admin
+brownie account generate testing
 ```
 I had problems that brownie catched up the network from the `brownie-config.yml` directly, therefore this is needed.
 The network can be removed with `brownie networks delete bc4p-mainnet`
+
+```python
+requests.post('http://bc4p.nowum.fh-aachen.de/faucet/api/add_key', data= {'public_key': PUBLIC_KEY_FROM_BROWNIE})
+```
 
 TODO: fix the contract IDs in the config so that the simulation can run on our contracts.
