@@ -1,5 +1,5 @@
 from brownie import network, project, Contract, config
-import sys, os
+import sys, os, json
 
 
 has_started = False
@@ -16,10 +16,14 @@ def init():
     project_path = os.path.dirname(os.path.realpath(__file__))+"/b4p-contracts"
     p = project.load(project_path)
     p.load_config()
-    network.connect('mainnet-fork')
+    network.connect('bc4p-mainnet')
     
+    with open(os.path.dirname(os.path.realpath(__file__))+'/EURS.abi', 'r') as abi_file:
+        eurs_abi_data = json.load(abi_file)
 
-    EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs"))
+    #EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs"))
+    EURS = Contract.from_abi("EURSToken", "0xE3feb6eBB7d0B8d0721fEE4842fAE7668259be6e", eurs_abi_data)
+
     zero_address = "0x0000000000000000000000000000000000000000"
     url = "https://exampleURL.com"
     from .accounts import Accounts
@@ -41,36 +45,3 @@ def init():
 
 def started():
     return has_started
-
-
-class BC4PBlockchainInterface:
-    def __init__(self, market_id, simulation_id=None):
-        self.market_id = market_id
-        self.simulation_id = simulation_id
-        b4p.Markets.new(market_id, "admin")
-        print(f"new market created with id: {market_id}")
-
-
-    def create_new_offer(self, energy, price, seller):
-        if not b4p.Accounts[seller+"_account"]:
-            print(f"new account created: {seller}_account")
-            b4p.Accounts.new(seller+"_account")
-        if not b4p.ProducingAssets[seller]:
-            print(f"new producing asset created: {seller} for market: {self.market_id}")
-            b4p.ProducingAssets.new(seller, seller+"_account", self.market_id)
-        return str(uuid.uuid4())
-
-    def cancel_offer(self, offer):
-        pass
-
-    def change_offer(self, offer, original_offer, residual_offer):
-        pass
-
-    def handle_blockchain_trade_event(self, offer, buyer, original_offer, residual_offer):
-        return str(uuid.uuid4()), residual_offer
-
-    def track_trade_event(self, time_slot, trade):
-        pass
-
-    def bc_listener(self):
-        pass

@@ -7,7 +7,6 @@ class Accounts():
         self.accounts = {}
         self.accounts["admin"] = Account(accounts[0])
         EURS.transfer(self.accounts["admin"], 1000, {"from":  EURS})
-        self.counter = 1
         pass
 
     def __getitem__(self, name):
@@ -17,8 +16,7 @@ class Accounts():
 
 
     def new(self, name):
-        self.accounts[name] = Account(accounts[self.counter])
-        self.counter += 1
+        self.accounts[name] = Account(accounts.add())
         EURS.transfer(self.accounts[name], 1000, {"from":  EURS})
         return self.accounts[name]
 
