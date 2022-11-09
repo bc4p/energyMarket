@@ -15,13 +15,14 @@ def init():
     project_path = os.path.dirname(os.path.realpath(__file__))+"/b4p-contracts"
     p = project.load(project_path)
     p.load_config()
-    network.connect('bc4p-mainnet')
+    network_key = 'bc4p-mainnet'
+    network.connect(network_key)
     
     with open(os.path.dirname(os.path.realpath(__file__))+'/EURS.abi', 'r') as abi_file:
         eurs_abi_data = json.load(abi_file)
 
     #EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs"))
-    EURS = Contract.from_abi("EURSToken", "0xE3feb6eBB7d0B8d0721fEE4842fAE7668259be6e", eurs_abi_data)
+    EURS = Contract.from_abi("EURSToken", config["networks"][network_key]['eurs'], eurs_abi_data)
 
     zero_address = "0x0000000000000000000000000000000000000000"
     url = "https://exampleURL.com"
