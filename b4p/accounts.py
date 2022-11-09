@@ -5,7 +5,7 @@ from brownie.network import accounts
 class Accounts():
     def __init__(self):
         self.accounts = {}
-        self.accounts["admin"] = Account(accounts[0])
+        self.accounts["admin"] = Account(accounts.add())
         EURS.transfer(self.accounts["admin"], 1000, {"from":  EURS})
         pass
 

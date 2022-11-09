@@ -11,7 +11,6 @@ def init():
     global url
     global EURS
 
-    has_started = True
 
     project_path = os.path.dirname(os.path.realpath(__file__))+"/b4p-contracts"
     p = project.load(project_path)
@@ -40,6 +39,7 @@ def init():
     globals()["Markets"] = Markets()
     globals()["ProducingAssets"] = ProducingAssets()
     globals()["ConsumingAssets"] = ConsumingAssets()
+    has_started = True
 
     
 
