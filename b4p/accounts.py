@@ -3,10 +3,14 @@ from brownie.network import accounts
 
 
 class Accounts():
-    def __init__(self):
+    def __init__(self,accountname="",with_name=False):
         self.accounts = {}
-        self.accounts["admin"] = Account(accounts.add())
-        EURS.transfer(self.accounts["admin"], 1000, {"from":  EURS})
+        if with_name==False:
+            self.accounts["admin"] = Account(accounts.add())
+        else:
+            self.accounts["admin"] = Account(accounts.at(accountname, force=True))
+        #cannot do this in FH blockchain
+        #EURS.transfer(self.accounts["admin"], amount, {"from":  EURS})
         pass
 
     def __getitem__(self, name):
@@ -17,7 +21,7 @@ class Accounts():
 
     def new(self, name):
         self.accounts[name] = Account(accounts.add())
-        EURS.transfer(self.accounts[name], 1000, {"from":  EURS})
+        #EURS.transfer(self.accounts[name], 1000, {"from":  EURS})
         return self.accounts[name]
 
 class Account():
