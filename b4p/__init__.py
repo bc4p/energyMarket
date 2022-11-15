@@ -27,6 +27,7 @@ def init_account():
 
     zero_address = "0x0000000000000000000000000000000000000000"
     url = "https://exampleURL.com"
+    
     from .accounts import Accounts
     return Accounts()
 
@@ -59,13 +60,14 @@ def init(account=None):
     from .market import Markets
     from .producingAsset import ProducingAssets
     from .consumingAsset import ConsumingAssets
+    from .MockToken import MockToken
 
     from .registry import Registry
 
   
     globals()["Accounts"] = account
-
     globals()["EnergyToken"] = EnergyToken()
+    globals()["Token"] = MockToken()
     globals()["Registry"] = Registry()
     globals()["Markets"] = Markets()
     globals()["ProducingAssets"] = ProducingAssets()

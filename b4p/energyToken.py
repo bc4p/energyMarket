@@ -2,6 +2,7 @@ from . import url, p
 class EnergyToken():
         def __init__(self):
             from . import Accounts
+            print("URL",url)
             self.energyToken = p.EnergyToken.deploy(url, {"from": Accounts["admin"]})
 
         def __str__(self):
