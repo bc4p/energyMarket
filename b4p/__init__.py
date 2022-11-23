@@ -1,7 +1,6 @@
 from brownie import network, project, Contract, config
 import sys, os, json
 
-
 has_started = False
 
 def init():
@@ -10,19 +9,22 @@ def init():
     global zero_address
     global url
     global EURS
+    global FAUCET
 
 
     project_path = os.path.dirname(os.path.realpath(__file__))+"/b4p-contracts"
     p = project.load(project_path)
     p.load_config()
-    network_key = 'bc4p-mainnet'
+    network_key = 'mainnet-fork'
     network.connect(network_key)
     
-    with open(os.path.dirname(os.path.realpath(__file__))+'/EURS.abi', 'r') as abi_file:
+    with open(os.path.dirname(os.path.realpath(__file__))+'/ERC20.abi', 'r') as abi_file:
         eurs_abi_data = json.load(abi_file)
 
-    #EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs"))
-    EURS = Contract.from_abi("EURSToken", config["networks"][network_key]['eurs'], eurs_abi_data)
+    #EURS = Contract.from_explorer(config["networks"][network.show_active()].get("eurs")["address"])
+    EURS = Contract.from_abi("EURSToken", config["networks"][network_key]['eurs']["address"], eurs_abi_data)
+    
+    FAUCET = config["networks"][network.show_active()].get("eurs")["faucet"]
 
     zero_address = "0x0000000000000000000000000000000000000000"
     url = "https://exampleURL.com"
@@ -41,6 +43,8 @@ def init():
     globals()["ProducingAssets"] = ProducingAssets()
     globals()["ConsumingAssets"] = ConsumingAssets()
     has_started = True
+
+    print(f'\nbronwnie has successfully initialized\nconnnection: {network.show_active()}\n\n')
 
     
 

@@ -1,4 +1,6 @@
-from . import p, EURS
+from . import p, EURS, FAUCET
+import b4p
+from b4p.utils import print_transaction_events
 
 class ConsumingAssets():
     def __init__(self):
@@ -9,9 +11,8 @@ class ConsumingAssets():
         from . import Markets, Registry, Accounts
         market = Markets[market1]
         account = Accounts[accountName]
-        ca = self.consumingAssetContract.deploy(market, Registry, {"from": account})
-        EURS.transfer(ca, 1000, {"from":EURS})
-        self.consumingAssets[assetName] = ConsumingAsset(ca,account)
+        ca = self.consumingAssetContract.deploy(market.address, Registry, {"from": account.address})
+        self.consumingAssets[assetName] = ConsumingAsset(ca, account, assetName, market)
         return self.consumingAssets[assetName]
 
     def __getitem__(self, name):
@@ -19,22 +20,35 @@ class ConsumingAssets():
             return self.consumingAssets[name]
         return False
 
+    def __str__(self):
+        return str(self.consumingAssets)
+
+    def __repr__(self):
+        return self.consumingAssets
+
 
 class ConsumingAsset():
-    def __init__(self, asset, owner):
+    def __init__(self, asset, owner, name, market):
         self.asset = asset
-        EURS.transfer(self.asset, 1000, {"from": EURS})
         self.owner = owner
-
-    def __str__(self):
-        return self.asset.__str__()
+        self.name = name
+        self.market = market
+        EURS.transfer(self.asset, 1000*(10**EURS.decimals()), {"from":FAUCET})
 
     def __repr__(self):
         return self.asset.__repr__()
+
+    def __str__(self):
+        return f'<ConsumingAsset ({self.name}, {self.owner}, {self.asset}, {self.market})>'
+
+    @property
+    def address(self):
+        return self.asset.__str__()
         
-    def createBid(self, price, amount):
-        tx = self.asset.createBid(price, amount, {"from":self.owner})
+    def createBid(self, price, amount, id):
+        tx = self.asset.createBid(price*(10**(EURS.decimals())), amount*(10**6), id, {"from":self.owner})
         tx.wait(1)
+        print_transaction_events(tx)
     
     def balanceEURS(self):
         return EURS.balanceOf(self.asset)
