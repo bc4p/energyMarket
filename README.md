@@ -46,4 +46,4 @@ The network can be removed with `brownie networks delete bc4p-mainnet`
 requests.post('http://bc4p.nowum.fh-aachen.de/faucet/api/add_key', data= {'public_key': PUBLIC_KEY_FROM_BROWNIE})
 ```
 
-TODO: fix the contract IDs in the config so that the simulation can run on our contracts.
+##TODO: fix the contract IDs in the config so that the simulation can run on our contracts.
