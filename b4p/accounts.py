@@ -1,39 +1,54 @@
-from . import EURS
 from brownie.network import accounts
-
-
+from . import url, p, Contract, config, network
+from .utils import fund_account
 class Accounts():
-    def __init__(self,accountname="",with_name=False):
+    def __init__(self,account=None, faucet=True):
         self.accounts = {}
-        if with_name==False:
-            self.accounts["admin"] = Account(accounts.add())
-        else:
-            self.accounts["admin"] = Account(accounts.at(accountname, force=True))
+        if faucet:
+            self.accounts["faucet"] = self.new("faucet", account=Faucet().address)
+        
+        self.accounts["admin"] = self.new("admin", account)
         #cannot do this in FH blockchain
-        #EURS.transfer(self.accounts["admin"], amount, {"from":  EURS})
-        pass
+        #EURS.transfer(self.accounts["admin"].address, amount, {"from":  FAUCET})
+        
 
     def __getitem__(self, name):
-        if name in self.accounts:
-            return self.accounts[name]
-        return False
+        path = f"./accounts_keystore/{name}.json"
+        account = accounts.load(filename=path, password="no_password")
+        return account
 
+    def __str__(self):
+        return str(self.accounts)
 
-    def new(self, name):
-        self.accounts[name] = Account(accounts.add())
-        #EURS.transfer(self.accounts[name], 1000, {"from":  EURS})
+    def __repr__(self):
+        return self.accounts
+
+    def new(self, name, account=None, with_funding=True, password="no_password"):
+        if(account == None):
+            self.accounts[name] = Account(accounts.add(),name)
+        else:
+            self.accounts[name] = Account(accounts.at(account, force=True),name)
+        if with_funding:
+            self.accounts["faucet"].transfer(self.accounts[name].address, "1 ether")
+        self.accounts[name].save(password=password)
         return self.accounts[name]
 
 class Account():
 
-    def __init__(self, account):
+    def __init__(self, account,name):
         self.account = account
-
-    def __str__(self):
+        self.name = name
+            
+        
+    @property
+    def address(self):
         return self.account.__str__()
-
+        
     def __repr__(self):
         return self.account.__repr__()
+
+    def __str__(self):
+        return f'<Account ({self.name}, {self.address})>'
 
     def deploy(self, *args, **kwargs):
         return self.account.deploy(*args, **kwargs)
@@ -42,13 +57,30 @@ class Account():
         return self.account.transfer(*args, **kwargs)
 
     def balanceEURS(self):
-        return EURS.balanceOf(self.account)
+        from . import EursToken
+        return EursToken.balanceOf(self.account)
 
     def balanceEnergyToken(self):
         from . import EnergyToken
         return EnergyToken.balanceOf(self.account)
+    
+    def balance(self):
+        return self.account.balance()
+
+    def save(self, password, overwrite=True):
+        self.account.save(filename=f"./accounts_keystore/{self.name}", overwrite=overwrite, password=password)
+        
 
 
+class Faucet(Account):
+    def __init__(self, existing=True, fund=True):
+        if(existing):
+            faucet = accounts.add(config["networks"][network.show_active()]["faucet"]["faucet_pk"])
+            fund_account(faucet)
+        else:
+            faucet = accounts.add()
+            fund_account(faucet)
+        Account.__init__(self,faucet,"faucet")
 
 
 
