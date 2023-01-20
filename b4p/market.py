@@ -149,6 +149,12 @@ class Market():
 
     def status(self):
         print(f'\n\n°°°°°°°°°° MARKET STATUS °°°°°°°°°°\nNUM OFFERS: {self.offers}  |  NUM BIDS: {self.bids}\n\n')
-        
+
+    def fee(self):
+        return self.market.fee()
+
+    def set_fee(self,new_fee):
+        self.market.setFee(new_fee)
+
     
 

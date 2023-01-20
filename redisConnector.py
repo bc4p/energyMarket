@@ -14,10 +14,9 @@ p.psubscribe('*/response/register_participant')
 p.psubscribe('external-aggregator//*/response/batch_commands')
 p.psubscribe('external-aggregator//*/events/all')
 
-# p.psubscribe('*')
+p.psubscribe('*')
         
 print("\nredis connector is listening for market events...\n")
-
 
 """"
 decorator used in event handlers to log events into a redis list. 
@@ -65,20 +64,25 @@ def handle_all_market_events(event):
     if(data["event"] == "market"):
         handle_slot_event(data["grid_tree"])
     elif(data["event"] == "tick"):
-        pass#handle_tick_event(data)
+        handle_tick_event(data)
     elif(data["event"] == "trade"):
         handle_trade_event(data)
     elif(data["event"] == "finish"):
         handle_finish_event(data)
 
-    
-
 ## SUB-EVENTS
 def handle_slot_event(grid_tree):
-    #print("#####SLOT EVENT######")
+    print("#####SLOT EVENT######")
     for node_id in grid_tree:
         node = grid_tree[node_id]
+        market_fee = grid_tree[node_id]["last_market_fee"]
+        if  market_fee != current :
+            b4p.Markets['main'].set_fee(market_fee)
+            change_current = b4p.Markets['main'].fee()
+            print("change_current",change_current)
         get_node_info(node, node_id)
+
+
 
 def get_node_info(node, node_id):
     if "children" in node:
@@ -97,7 +101,18 @@ def get_node_info(node, node_id):
 
 
 def handle_tick_event(data):
-    pass
+    grid_tree = data['grid_tree']
+    for node_id in grid_tree:
+        market_fee = grid_tree[node_id]["last_market_fee"]
+        current_market_fee = b4p.Markets['main'].fee()
+        if market_fee != current_market_fee:
+            b4p.Markets['main'].set_fee(market_fee)
+            # change_current_market_fee = b4p.Markets['main'].fee()
+            # print("change_current", change_current)
+        print("###")
+
+
+
 
 def handle_trade_event(data):
     print("\n\n\n\n************************************************************** TRADE EVENT **************************************************************")
@@ -137,7 +152,7 @@ def handle_all(event):
 
 
 
-    
+# def handle_market_offer_fee(event)
 
 
 
