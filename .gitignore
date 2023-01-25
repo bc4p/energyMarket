@@ -7,4 +7,5 @@
 /.ipynb_checkpoints
 .ipynb_checkpoints/*.ipynb
 b4p/__pycache__
+/.idea
 
