@@ -57,6 +57,7 @@ def handle_command_event(event):
 def handle_account_registration(event):
     data = json.loads(event["data"])
     new_account = b4p.Accounts.new(data["transaction_id"])
+    b4p.SoulboundNFT.safeMint(new_account)
 
 @persist_in_list
 def handle_all_market_events(event):

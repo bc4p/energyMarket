@@ -35,6 +35,8 @@ def init_account():
     from .eursToken import EursToken
     globals()["EursToken"] = EursToken()
 
+    from .soulboundNFT import SoulBoundNFT
+    globals()["SoulboundNFT"] = SoulBoundNFT()
 
 def init(account=None):
    
