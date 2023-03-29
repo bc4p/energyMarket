@@ -2,11 +2,12 @@ from brownie.network import accounts
 from . import url, p, Contract, config, network
 from .utils import fund_account
 class Accounts():
-    def __init__(self,account=None, faucet=True):
+    def __init__(self,account=None, faucet=False):
         self.accounts = {}
         if faucet:
             self.accounts["faucet"] = self.new("faucet", account=Faucet().address)
-        
+        else:
+            self.accounts["faucet"] = self.new("faucet", account=Faucet(existing=False).address)
         self.accounts["admin"] = self.new("admin", account)
         #cannot do this in FH blockchain
         #EURS.transfer(self.accounts["admin"].address, amount, {"from":  FAUCET})
@@ -79,7 +80,11 @@ class Faucet(Account):
             fund_account(faucet)
         else:
             faucet = accounts.add()
-            fund_account(faucet)
+            if network.show_active() == 'development':
+                accounts[0].transfer(faucet, "50 ether")
+
+            else:
+                fund_account(faucet)
         Account.__init__(self,faucet,"faucet")
 
 

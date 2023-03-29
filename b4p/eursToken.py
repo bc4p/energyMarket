@@ -2,7 +2,7 @@ from . import url, p, config, network, Contract, Accounts
 import os 
 import json
 class EursToken():
-        def __init__(self, deploy=False):
+        def __init__(self, deploy=True):
             if(deploy):
                 self.admin = Accounts.new("eurs_admin", with_funding=True)
                 self.eurs = p.EursMock.deploy({"from":Accounts["eurs_admin"]})

@@ -12,7 +12,7 @@ class ProducingAssets():
         market = Markets[market2]
         account = Accounts[accountName]
         pa = self.producingAssetContract.deploy(market.address, Registry, {"from": account.address})
-        self.produducingAssets[assetName] = ProducingAsset(pa, account, assetName, market)
+        self.produducingAssets[assetName] = ProducingAsset(pa, account, assetName, accountName, market)
         ##EursToken.transferFrom(Accounts["eurs_admin"].address, self.produducingAssets[assetName].address, 10000)
         ##EnergyToken.transferFrom(Accounts["energy_admin"].address, self.produducingAssets[assetName].address, 10000)
         return self.produducingAssets[assetName]
@@ -32,10 +32,11 @@ class ProducingAssets():
 
 
 class ProducingAsset():
-    def __init__(self, asset, account, name, market, with_funding=True):
+    def __init__(self, asset, account, name,accountName, market, with_funding=True):
         self.asset = asset
         self.owner = account
         self.name = name
+        self.account_id = accountName
         self.market = market
         if with_funding:
             res = EursToken.transfer(self.asset.address, 100*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})

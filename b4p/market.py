@@ -27,8 +27,6 @@ class Markets():
 class Market():
     def __init__(self, market, account, name):
         self.market = market
-        print(Accounts["eurs_admin"].address)
-        print(EursToken.balanceOf(Accounts["eurs_admin"].address))
         EursToken.transfer(self.market.address, 50 * 10**(EursToken.decimals()), {"from":  Accounts["eurs_admin"]})
         self.owner = account
         self.name = name
@@ -45,7 +43,7 @@ class Market():
             
             def __repr__(self):
                 return f'<Offer({self.created_at}, {self.price}, {self.amount}, {self.original_market_addresss}, {self.last_market_address})>'
-            
+                
         def __init__(self, market):
             self.market = market
 
@@ -67,6 +65,14 @@ class Market():
             for i in range(0, len(self)):
                 if self[i].id == offerId:
                     return self[i]
+
+
+        def indexOf(self, offer):
+            for i in self:
+                temp_offer = self[i]
+                if temp_offer.id == offer.id:
+                    return i
+            return False
 
         
 
@@ -106,6 +112,13 @@ class Market():
             for i in range(0, len(self)):
                 if self[i].id == bidId:
                     return self[i]
+
+        def indexOf(self, bid):
+            for i in self:
+                temp_bid = self[i]
+                if temp_bid.id == bid.id:
+                    return i
+            return False
 
 
     @property

@@ -17,6 +17,37 @@ p.psubscribe('external-aggregator//*/events/all')
 p.psubscribe('*')
         
 print("\nredis connector is listening for market events...\n")
+import random 
+
+types = ["renewable", 'non-renewable']
+
+def get_random_info():
+    asset_info = {
+        'location': (random.random()*2.0, random.random()*2.0),
+        'type': types[random.randint(0,1)]
+    }
+    return asset_info
+
+def get_random_preferences():
+    preferences = {
+        'location':'nearest',
+        'types': types[random.randint(0,1)],
+        'weights': [random.random() for _ in range(3)]
+    }
+    return preferences
+
+def get_random_prod_info():
+    info = get_random_info()
+    info['preferences'] = get_random_preferences()
+    return info
+
+
+preferences = {
+
+    "location":{
+
+    }
+}
 
 """"
 decorator used in event handlers to log events into a redis list. 
@@ -40,6 +71,9 @@ def handle_registration(event):
     account_id = data["transaction_id"]
     new_prod_asset = b4p.ProducingAssets.new(asset_id, account_id, "main")
     new_cons_asset = b4p.ConsumingAssets.new(asset_id, account_id, "main")
+    b4p.SoulboundNFT.add_asset_data(new_cons_asset, get_random_prod_info())
+    b4p.SoulboundNFT.add_asset_data(new_prod_asset, get_random_info())
+
 
 @persist_in_list
 def handle_command_event(event):
@@ -57,7 +91,7 @@ def handle_command_event(event):
 def handle_account_registration(event):
     data = json.loads(event["data"])
     new_account = b4p.Accounts.new(data["transaction_id"])
-    b4p.SoulboundNFT.safeMint(new_account)
+    b4p.SoulboundNFT.safeMint(new_account, {})
 
 @persist_in_list
 def handle_all_market_events(event):
@@ -76,12 +110,14 @@ def handle_slot_event(grid_tree):
     print("#####SLOT EVENT######")
     for node_id in grid_tree:
         node = grid_tree[node_id]
+        current = b4p.Markets['main'].fee()
+
         market_fee = grid_tree[node_id]["last_market_fee"]
         if  market_fee != current :
             b4p.Markets['main'].set_fee(market_fee)
             change_current = b4p.Markets['main'].fee()
             print("change_current",change_current)
-        get_node_info(node, node_id)
+        #get_node_info(node, node_id)
 
 
 
@@ -133,7 +169,16 @@ def handle_finish_event(data):
 
 def handle_bid_event(account, bid):
     asset = b4p.ConsumingAssets[account]
+
     asset.createBid(bid["price"], bid["energy"], bid["id"])
+
+    market = b4p.Markets['main']
+    bid_issued = market.bids.getById(bid["id"])
+    print("account", account)
+    matched_offer = b4p.SoulboundNFT.highiest_utility_offer(asset, market)
+    if(matched_offer):
+        market.matchBidAndOffer(market.bids.indexOf(bid_issued), market.offers.indexOf(matched_offer))
+    
     print(f'\nnew BID --> price: {bid["price"]}  energy: {bid["energy"]}\n')
 
 
@@ -147,7 +192,7 @@ def handle_offer_event(account, offer):
 
 ## OTHER
 def handle_all(event):
-    print(event)
+    #print(event)
     pass
 
 

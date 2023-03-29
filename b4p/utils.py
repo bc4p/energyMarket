@@ -30,6 +30,7 @@ def  fund_account(account):
 
     initial_balance = account.balance()
     response = requests.request("POST", url, headers=headers, data=payload)
+
     response_message = json.loads(response.text)["Message"]
     response_status_code = response.status_code
     if response_status_code == 200:

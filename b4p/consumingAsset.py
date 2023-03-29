@@ -12,7 +12,7 @@ class ConsumingAssets():
         market = Markets[market1]
         account = Accounts[accountName]
         ca = self.consumingAssetContract.deploy(market.address, Registry, {"from": account.address})
-        self.consumingAssets[assetName] = ConsumingAsset(ca, account, assetName, market)
+        self.consumingAssets[assetName] = ConsumingAsset(ca, account, assetName, accountName, market)
         return self.consumingAssets[assetName]
 
     def __getitem__(self, name):
@@ -28,11 +28,12 @@ class ConsumingAssets():
 
 
 class ConsumingAsset():
-    def __init__(self, asset, owner, name, market):
+    def __init__(self, asset, owner, name, accountName ,market):
         self.asset = asset
         self.owner = owner
         self.name = name
         self.market = market
+        self.account_id = accountName
         res = EursToken.transfer(self.asset.address, 50*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
         res.wait(1)
 

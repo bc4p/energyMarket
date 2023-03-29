@@ -16,7 +16,7 @@ def init_account():
     project_path = os.path.dirname(os.path.realpath(__file__))+"/b4p-contracts"
     p = project.load(project_path)
     p.load_config()
-    network_key = 'bc4p-mainnet'
+    network_key = 'development'
     network.connect(network_key)
     
     
