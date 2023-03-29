@@ -1,10 +1,10 @@
 
-from . import url, p, Contract, config, network
+from . import url, p, Contract, config, network, EXISTING
 from brownie.network import accounts
 
 class Faucet():
 
-    def __init__(self, existing=True):
+    def __init__(self, existing=EXISTING):
         if(existing):
             print(network)
             self.faucet = accounts.at(config["networks"][network.show_active()]['eurs']['faucet'], force=True)

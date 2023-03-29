@@ -1,5 +1,5 @@
 from brownie.network import accounts
-from . import url, p, Contract, config, network
+from . import url, p, Contract, config, network, EXISTING
 from .utils import fund_account
 class Accounts():
     def __init__(self,account=None, faucet=False):
@@ -74,7 +74,7 @@ class Account():
 
 
 class Faucet(Account):
-    def __init__(self, existing=True, fund=True):
+    def __init__(self, existing=not EXISTING, fund=True):
         if(existing):
             faucet = accounts.add(config["networks"][network.show_active()]["faucet"]["faucet_pk"])
             fund_account(faucet)

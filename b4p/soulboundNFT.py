@@ -1,10 +1,10 @@
-from . import url, p, config, network, Contract, Accounts
+from . import url, p, config, network, Contract, Accounts, EXISTING
 import os 
 import json
 
 class SoulBoundNFT():
 
-    def __init__(self, deploy=True):
+    def __init__(self, deploy=EXISTING):
         if(deploy):
             self.admin = Accounts.new("soul_admin", with_funding=True)
             self.soulboundNFT = p.SoulBoundToken.deploy({"from": Accounts["faucet"]})

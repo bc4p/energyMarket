@@ -1,8 +1,8 @@
-from . import url, p, Contract, config, network, Accounts
+from . import url, p, Contract, config, network, Accounts, EXISTING
 import os
 import json
 class EnergyToken():
-        def __init__(self, deploy=True):
+        def __init__(self, deploy=EXISTING):
             if(deploy):
                 self.admin = Accounts.new("energy_admin", with_funding=True)
                 self.energyToken = p.EnergyToken.deploy( "EnergyToken",{"from":Accounts["energy_admin"]})

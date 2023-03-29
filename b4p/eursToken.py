@@ -1,8 +1,8 @@
-from . import url, p, config, network, Contract, Accounts
+from . import url, p, config, network, Contract, Accounts, EXISTING
 import os 
 import json
 class EursToken():
-        def __init__(self, deploy=True):
+        def __init__(self, deploy=EXISTING):
             if(deploy):
                 self.admin = Accounts.new("eurs_admin", with_funding=True)
                 self.eurs = p.EursMock.deploy({"from":Accounts["eurs_admin"]})

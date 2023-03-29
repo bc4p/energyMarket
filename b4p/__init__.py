@@ -12,7 +12,11 @@ def init_account():
     global has_started
     global p
 
+    global EXISTING
 
+    EXISTING = True
+
+    
     project_path = os.path.dirname(os.path.realpath(__file__))+"/b4p-contracts"
     p = project.load(project_path)
     p.load_config()
