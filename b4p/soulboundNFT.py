@@ -54,16 +54,24 @@ class SoulBoundNFT():
             return json_data[cons_asset.address]
 
 
-    def compute_utility(self, const_asset, offer):
+    def compute_utility(self, const_asset, prod_asset):
         data = self.get_asset_data(const_asset)
+        prod_asset_data = self.get_asset_data(prod_asset)
+
+        print("data: ", data)
+        print("offer data: ", prod_asset_data)
         return 0
 
     def highiest_utility_offer(self, asset, market):
+        from . import ProducingAssets
         highiest_index = -1
         highiest_utitlity = 0
-        for offer, i in enumerate(market.offers):
-            u = self.compute_utility(asset, offer)
-            print(u)
+        for i, offer in enumerate(market.offers):
+            prod_asset = ProducingAssets.existing(offer.original_market_address)
+            print("prod_asset: ", prod_asset)
+            prod_asset_data = self.get_asset_data(prod_asset)
+            print("prod_asset data: ", prod_asset_data)
+            u = self.compute_utility(asset, prod_asset)
             if u > highiest_utitlity:
                 highiest_index = u
         if highiest_index != -1:

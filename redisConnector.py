@@ -107,7 +107,7 @@ def handle_all_market_events(event):
 
 ## SUB-EVENTS
 def handle_slot_event(grid_tree):
-    print("#####SLOT EVENT######")
+    ##print("#####SLOT EVENT######")
     for node_id in grid_tree:
         node = grid_tree[node_id]
         current = b4p.Markets['main'].fee()
@@ -146,39 +146,39 @@ def handle_tick_event(data):
             b4p.Markets['main'].set_fee(market_fee)
             # change_current_market_fee = b4p.Markets['main'].fee()
             # print("change_current", change_current)
-        print("###")
 
 
 
 
 def handle_trade_event(data):
-    print("\n\n\n\n************************************************************** TRADE EVENT **************************************************************")
-    trades = data["trade_list"]
-    for trade in trades:
-        bid_id = trade["bid_id"]
-        asset = b4p.ProducingAssets[trade["asset_id"]]
-        price = trade["trade_price"]
-        amount = trade["traded_energy"]
-        if bid_id != "None":
-            asset.acceptBid(price, amount, bid_id)
+    pass
+    # print("\n\n\n\n************************************************************** TRADE EVENT **************************************************************")
+    # trades = data["trade_list"]
+    # for trade in trades:
+    #     bid_id = trade["bid_id"]
+    #     asset = b4p.ProducingAssets[trade["asset_id"]]
+    #     price = trade["trade_price"]
+    #     amount = trade["traded_energy"]
+    #     if bid_id != "None":
+    #         asset.acceptBid(price, amount, bid_id)
         
-    print("\n\n\n\n*****************************************************************************************************************************************")
+    # print("\n\n\n\n*****************************************************************************************************************************************")
 
 def handle_finish_event(data):
     pass
 
 def handle_bid_event(account, bid):
     asset = b4p.ConsumingAssets[account]
-
     asset.createBid(bid["price"], bid["energy"], bid["id"])
+    
+    prod_asset = b4p.ProducingAssets[account]
+    prod_asset.createOffer(bid["price"], bid["energy"], bid["id"])
 
     market = b4p.Markets['main']
     bid_issued = market.bids.getById(bid["id"])
-    print("account", account)
     matched_offer = b4p.SoulboundNFT.highiest_utility_offer(asset, market)
     if(matched_offer):
         market.matchBidAndOffer(market.bids.indexOf(bid_issued), market.offers.indexOf(matched_offer))
-    
     print(f'\nnew BID --> price: {bid["price"]}  energy: {bid["energy"]}\n')
 
 

@@ -37,12 +37,12 @@ class Market():
                 self.created_at = offer[0]
                 self.price = offer[1]
                 self.amount = offer[2]
-                self.original_market_addresss = offer[3]
+                self.original_market_address = offer[3]
                 self.last_market_address = offer[4]
                 self.id = offer[6]
             
             def __repr__(self):
-                return f'<Offer({self.created_at}, {self.price}, {self.amount}, {self.original_market_addresss}, {self.last_market_address})>'
+                return f'<Offer({self.created_at}, {self.price}, {self.amount}, {self.original_market_address}, {self.last_market_address})>'
                 
         def __init__(self, market):
             self.market = market
@@ -51,7 +51,7 @@ class Market():
             return self.market.offersLength()
 
         def __getitem__(self, index):
-            if len(self) < index:
+            if len(self) <= index:
                 raise IndexError(f'offer with index {index} out of range for offers of length {len(self)}')
             return self.Offer(self.market.offers(index))
 
@@ -84,12 +84,12 @@ class Market():
                 self.created_at = bid[0]
                 self.price = bid[1]
                 self.amount = bid[2]
-                self.original_market_addresss = bid[3]
+                self.original_market_address = bid[3]
                 self.last_market_address = bid[4]
                 self.id = bid[6]
             
             def __repr__(self):
-                return f'<Bid({self.created_at}, {self.price}, {self.amount}, {self.original_market_addresss}, {self.last_market_address})>'
+                return f'<Bid({self.created_at}, {self.price}, {self.amount}, {self.original_market_address}, {self.last_market_address})>'
             
         def __init__(self, market):
             self.market = market
@@ -98,7 +98,7 @@ class Market():
             return self.market.bidsLength()
 
         def __getitem__(self, index):
-            if len(self) < index:
+            if len(self) <= index:
                 raise IndexError(f'index {index} out of range for bids of length {len(self)}')
             return self.Bid(self.market.bids(index))
 

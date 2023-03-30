@@ -16,6 +16,17 @@ class ProducingAssets():
         ##EursToken.transferFrom(Accounts["eurs_admin"].address, self.produducingAssets[assetName].address, 10000)
         ##EnergyToken.transferFrom(Accounts["energy_admin"].address, self.produducingAssets[assetName].address, 10000)
         return self.produducingAssets[assetName]
+    
+    def existing(self, address):
+        print("address: ", address)
+
+        for name in self.produducingAssets:
+            p_asset = self.produducingAssets[name]
+            print("check address: ", p_asset.asset.address)
+
+            if p_asset.asset.address == address:
+                return p_asset
+        return False
 
     def __getitem__(self, name):
         if name in self.produducingAssets:
@@ -63,7 +74,7 @@ class ProducingAsset():
         from . import EnergyToken
         final_price = int(price*(10**(EursToken.decimals())))
         final_amount = int(amount*(10**6))
-        bidAssetAddress = self.market.bids.getById(bidId).original_market_addresss
+        bidAssetAddress = self.market.bids.getById(bidId).original_market_address
         print(bidAssetAddress)
 
         print("\nBEFORE TRANSACTION\n")

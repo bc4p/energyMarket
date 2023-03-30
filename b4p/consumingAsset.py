@@ -14,6 +14,17 @@ class ConsumingAssets():
         ca = self.consumingAssetContract.deploy(market.address, Registry, {"from": account.address})
         self.consumingAssets[assetName] = ConsumingAsset(ca, account, assetName, accountName, market)
         return self.consumingAssets[assetName]
+    
+    def existing(self, address):
+        print("address: ", address)
+        for name in self.consumingAssets:
+            c_asset = self.consumingAssets[name]
+            print("check address: ", c_asset.asset.address)
+
+            if c_asset.asset.address == address:
+                return c_asset
+        return False
+    
 
     def __getitem__(self, name):
         if name in self.consumingAssets:
