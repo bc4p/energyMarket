@@ -74,30 +74,30 @@ def handle_all_market_events(event):
 def handle_slot_event(grid_tree):
     print("#####SLOT EVENT######")
     for node_id in grid_tree:
-        node = grid_tree[node_id]
         market_fee = grid_tree[node_id]["last_market_fee"]
-        if  market_fee != current :
+        current_market_fee = b4p.Markets['main'].fee()
+        if market_fee != current_market_fee:
             b4p.Markets['main'].set_fee(market_fee)
             change_current = b4p.Markets['main'].fee()
             print("change_current",change_current)
-        get_node_info(node, node_id)
+        #get_node_info(node, node_id)
 
 
 
-def get_node_info(node, node_id):
-    if "children" in node:
-        children = node["children"]
-        for child_node_id in children:
-            node = children[child_node_id]
-            get_node_info(node, child_node_id)
-            return  
-    if "asset_bill" in node:
-        asset_bill = node["asset_bill"]
-        if "bought" in asset_bill and asset_bill["bought"] > 0:
-            energy_bought = asset_bill["bought"]
-        if "sold" in asset_bill and asset_bill["sold"] > 0:
-            energy_sold = asset_bill["sold"]
-        return 
+# def get_node_info(node, node_id):
+#     if "children" in node:
+#         children = node["children"]
+#         for child_node_id in children:
+#             node = children[child_node_id]
+#             get_node_info(node, child_node_id)
+#             return  
+#     if "asset_bill" in node:
+#         asset_bill = node["asset_bill"]
+#         if "bought" in asset_bill and asset_bill["bought"] > 0:
+#             energy_bought = asset_bill["bought"]
+#         if "sold" in asset_bill and asset_bill["sold"] > 0:
+#             energy_sold = asset_bill["sold"]
+#         return 
 
 
 def handle_tick_event(data):
@@ -146,7 +146,7 @@ def handle_offer_event(account, offer):
 
 ## OTHER
 def handle_all(event):
-    print(event)
+    #print(event)
     pass
 
 

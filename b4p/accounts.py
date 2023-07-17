@@ -54,7 +54,13 @@ class Account():
         return self.account.deploy(*args, **kwargs)
 
     def transfer(self, *args, **kwargs):
-        return self.account.transfer(*args, **kwargs)
+        for tries in range(5):
+            try:
+                return self.account.transfer(*args, **kwargs)
+            except ValueError:
+                print(f"funding account: {self.account}")
+                fund_account(self.account)
+        
 
     def balanceEURS(self):
         from . import EursToken
