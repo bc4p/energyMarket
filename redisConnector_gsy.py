@@ -9,10 +9,12 @@ if not b4p.started():
 r = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 p = r.pubsub()
 
-p.psubscribe('*/register_participant')
-p.psubscribe('*/response/register_participant')
-p.psubscribe('external-aggregator//*/response/batch_commands')
-p.psubscribe('external-aggregator//*/events/all')
+p.psubscribe('*/area_event')
+p.psubscribe('*/area_event_response')
+p.psubscribe('*/market_event')
+p.psubscribe('*/market_event_reponse')
+p.psubscribe('*/OFFER')
+p.psubscribe('*/OFFER/response')
 
 p.psubscribe('*')
         
@@ -56,7 +58,9 @@ def handle_command_event(event):
             
 def handle_account_registration(event):
     data = json.loads(event["data"])
-    new_account = b4p.Accounts.new(data["transaction_id"])
+    area_id = event["channel"].split("/")[0]
+    print(area_id)
+    new_account = b4p.Accounts.new(area_id)
 
 @persist_in_list
 def handle_all_market_events(event):
@@ -146,7 +150,7 @@ def handle_offer_event(account, offer):
 
 ## OTHER
 def handle_all(event):
-    print(event)
+    #print(event)
     pass
 
 
@@ -160,10 +164,9 @@ def handle_all(event):
 while True:
     for i in p.listen():
         pattern = i["pattern"]
-        print(pattern)
-        if pattern == '*/register_participant':
+        if pattern == '*/area_event':
             handle_account_registration(i)    
-        if pattern == '*/response/register_participant':
+        if pattern == '*/area_event_response':
             handle_registration(i) 
         if pattern == 'external-aggregator//*/response/batch_commands':
             handle_command_event(i) 
