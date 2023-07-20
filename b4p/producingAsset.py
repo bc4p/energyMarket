@@ -38,7 +38,7 @@ class ProducingAsset():
         self.name = name
         self.market = market
         if with_funding:
-            res = EursToken.transfer(self.asset.address, 100*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
+            res = EursToken.transfer(self.asset.address, 500*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
             res.wait(1)
 
     def __repr__(self):
@@ -63,6 +63,7 @@ class ProducingAsset():
         final_price = int(price*(10**(EursToken.decimals())))
         final_amount = int(amount*(10**6))
         bidAssetAddress = self.market.bids.getById(bidId).original_market_addresss
+
         print(bidAssetAddress)
 
         print("\nBEFORE TRANSACTION\n")

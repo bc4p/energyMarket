@@ -33,7 +33,7 @@ class ConsumingAsset():
         self.owner = owner
         self.name = name
         self.market = market
-        res = EursToken.transfer(self.asset.address, 50*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
+        res = EursToken.transfer(self.asset.address, 5000*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
         res.wait(1)
 
     def __repr__(self):

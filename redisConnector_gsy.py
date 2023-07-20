@@ -10,7 +10,7 @@ if not b4p.started():
 r = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 p = r.pubsub()
 
-p.psubscribe('market/*/notify_events')
+p.psubscribe('market/*/notify_event')
 p.psubscribe('DEVICES UNIQUE NAMES')
 p.psubscribe('*/market_event')
 p.psubscribe('*/market_event_reponse')
@@ -90,8 +90,28 @@ def handle_offer_event(account, offer):
 
 def handle_market_event(event):
     event_data = json.loads(event["data"])
-    print(event_data)
+    trade = json.loads(event_data['kwargs']["trade"])
+    trade_id = trade["id"]
+    offer_bid = json.loads(trade["offer_bid"])
+    offer_bid_id = offer_bid["id"]
+    
+    price = offer_bid["price"]
+    energy = offer_bid["energy"]
+    rate = offer_bid["energy_rate"]
+    seller_id = trade["seller_id"]
+    buyer_id = trade["buyer_id"]
+    traded_energy = trade["traded_energy"]
+    trade_price = trade["trade_price"]
+    rate = trade_price/traded_energy
 
+    producing_asset = b4p.ProducingAssets[seller_id]
+    consuming_asset = b4p.ConsumingAssets[buyer_id]
+    print(f"producing asset: {producing_asset}")
+    print(f"consuming_asset: {consuming_asset}")
+
+    consuming_asset.createBid(price, energy, trade_id)
+    producing_asset.acceptBid(price, energy, trade_id)
+    
 
 
 ## OTHER
@@ -112,7 +132,7 @@ while True:
         pattern = i["pattern"]
         if pattern == 'DEVICES UNIQUE NAMES':
             handle_account_registration(i)    
-        if pattern == 'market/*/notify_events':
+        if pattern == 'market/*/notify_event':
             handle_market_event(i) 
       
 
