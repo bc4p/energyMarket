@@ -34,6 +34,9 @@ def init_account(network_key='mainnet-fork'):
     from .eursToken import EursToken
     globals()["EursToken"] = EursToken()
 
+    from .soulbound import SoulBound
+    globals()["SoulBound"] = SoulBound()
+
 
 def init(account=None):
    
@@ -71,6 +74,7 @@ def init(account=None):
     globals()["Markets"] = Markets()
     globals()["ProducingAssets"] = ProducingAssets()
     globals()["ConsumingAssets"] = ConsumingAssets()
+    
     has_started = True
 
     print(f'\nbronwnie has successfully initialized\nconnnection: {network.show_active()}\n\n')

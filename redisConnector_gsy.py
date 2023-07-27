@@ -3,13 +3,37 @@ import json
 import b4p
 import ast
 
+
+ACCOUNTS = {
+    "account1":["asset1"],
+    "account2":["asset2"],
+    "account3":["liege"],
+    "account4":["marketMaker"],
+    "account5":["grid"]
+}
+
 if not b4p.started():
     account = b4p.init_account('mainnet-fork')
     b4p.init(account)
-    b4p.Markets.new("main", "admin")
+
+
+b4p.Markets.new("main", "admin")
+for account in ACCOUNTS:
+    account_assets = ACCOUNTS[account]
+    eth_account = b4p.Accounts.new(account)
+    eth_account.fundEURS()
+    b4p.SoulBound.createIdentity(eth_account, "name")
+    for asset in account_assets:
+        b4p.ProducingAssets.new(asset, eth_account, "main")
+        b4p.ConsumingAssets.new(asset, eth_account, "main")
+        print(f"retreiving assets for {eth_account}:\n")
+        print(b4p.SoulBound.assets(eth_account.address))
+
+
+
+
 r = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 p = r.pubsub()
-
 p.psubscribe('market/*/notify_event')
 p.psubscribe('DEVICES UNIQUE NAMES')
 p.psubscribe('*/market_event')
@@ -104,6 +128,8 @@ def handle_market_event(event):
     trade_price = trade["trade_price"]
     rate = trade_price/traded_energy
 
+    print
+
     producing_asset = b4p.ProducingAssets[seller_id]
     consuming_asset = b4p.ConsumingAssets[buyer_id]
     print(f"producing asset: {producing_asset}")
@@ -130,8 +156,8 @@ def handle_all(event):
 while True:
     for i in p.listen():
         pattern = i["pattern"]
-        if pattern == 'DEVICES UNIQUE NAMES':
-            handle_account_registration(i)    
+        # if pattern == 'DEVICES UNIQUE NAMES':
+        #     handle_account_registration(i)    
         if pattern == 'market/*/notify_event':
             handle_market_event(i) 
       

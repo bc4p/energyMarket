@@ -7,12 +7,9 @@ class EursToken():
                 self.admin = Accounts.new("eurs_admin", with_funding=True)
                 self.eurs = p.EursMock.deploy({"from":Accounts["eurs_admin"]})
                 #self.eurs.createTokens(1000000*(10**self.eurs.decimals()),{"from":Accounts["eurs_admin"]})
-                print("EURS deployed")
             else:
                 with open(os.path.dirname(os.path.realpath(__file__))+'/ERC20.abi', 'r') as abi_file:
                     eurs_abi_data = json.load(abi_file)
-                print(config["networks"][network.show_active()]['eurs']['address'])
-                print(eurs_abi_data)
                 self.eurs = Contract.from_abi("EursMock", config["networks"][network.show_active()]['eurs']['address'], eurs_abi_data)
 
         def __str__(self):
@@ -32,3 +29,6 @@ class EursToken():
 
         def transferFrom(self, *args, **kwargs):
             return self.eurs.transferFrom(*args, **kwargs)
+        
+        def approve(self, *args, **kwargs):
+            return self.eurs.approve(*args, **kwargs)

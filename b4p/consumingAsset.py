@@ -1,5 +1,4 @@
 from . import p, EursToken, EnergyToken, Accounts
-import b4p
 from b4p.utils import print_transaction_events
 
 class ConsumingAssets():
@@ -7,18 +6,17 @@ class ConsumingAssets():
         self.consumingAssetContract = p.ConsumingAsset
         self.consumingAssets = {}
 
-    def new(self,assetName, accountName, market1):
-        from . import Markets, Registry, Accounts
+    def new(self,assetName, account, market1):
+        from . import Markets, Registry, Accounts, SoulBound
         market = Markets[market1]
-        account = Accounts[accountName]
-        ca = self.consumingAssetContract.deploy(market.address, Registry, {"from": account.address})
+        ca = self.consumingAssetContract.deploy(market.address, Registry,SoulBound, {"from": account.address})
         self.consumingAssets[assetName] = ConsumingAsset(ca, account, assetName, market)
         return self.consumingAssets[assetName]
 
     def __getitem__(self, name):
-        if name in self.consumingAssets:
-            return self.consumingAssets[name]
-        return False
+        if name not in self.consumingAssets:
+            raise ValueError(f"asset: {name} not present in available assets:\n{self.consumingAssets}")
+        return self.consumingAssets[name]
 
     def __str__(self):
         return str(self.consumingAssets)
@@ -28,13 +26,16 @@ class ConsumingAssets():
 
 
 class ConsumingAsset():
-    def __init__(self, asset, owner, name, market):
+    from . import EursToken
+    def __init__(self, asset, owner, name, market, with_funding=True):
         self.asset = asset
         self.owner = owner
         self.name = name
         self.market = market
-        res = EursToken.transfer(self.asset.address, 5000*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
-        res.wait(1)
+        EursToken.approve(market.address, 10000000*(10**EursToken.decimals()), {"from":owner.address})
+        if with_funding:
+            res = EursToken.transfer(self.asset.address, 5000*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
+            res.wait(1)
 
     def __repr__(self):
         return self.asset.__repr__()
