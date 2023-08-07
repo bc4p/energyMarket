@@ -60,11 +60,13 @@ class ProducingAsset():
 
 
 
-    def acceptBid(self, price, amount, bidId):
+    def acceptBid(self, price, amount, bidId, seller_id, buyer_id):
         from . import EnergyToken, EursToken
+        import b4p
         final_price = int(price*(10**(EursToken.decimals())))
         final_amount = int(amount*(10**6))
-        bidAssetAddress = self.market.bids.getById(bidId).original_market_addresss
+        bid = self.market.bids.getById(bidId)
+        bidAssetAddress = bid.original_market_addresss
         onwerAddress = self.owner.address
 
         eursBalanceBidder = EursToken.balanceOf(bidAssetAddress)
@@ -72,6 +74,8 @@ class ProducingAsset():
         balanceEnergyOwner = EnergyToken.totalBalance(onwerAddress)
         balanceEnergyReceiver = EnergyToken.totalBalance(bidAssetAddress)
 
+        b4p.logger.log_dictionary({"EUR":eursBalanceBidder, "ENERGY":balanceEnergyReceiver}, f"{buyer_id}_BALANCE")
+        b4p.logger.log_dictionary({"EUR":balanceOwner, "ENERGY":balanceEnergyOwner}, f"{seller_id}_BALANCE")
         print(bidAssetAddress)
 
         print("\nBEFORE TRANSACTION\n")
@@ -90,6 +94,7 @@ class ProducingAsset():
         print(f'    from {bidAssetAddress} | balance {eursBalanceBidder}\n    to {onwerAddress} | balance {balanceOwner}\n')
         print(f'    from {onwerAddress} | balance {balanceEnergyOwner}\n    to   {bidAssetAddress} | balance {balanceEnergyReceiver}\n')
         print_transaction_events(tx)
+
 
     def balanceEURS(self):
         return EursToken.balanceOf(self.asset)

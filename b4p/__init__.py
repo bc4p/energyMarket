@@ -24,6 +24,8 @@ def init_account(network_key='mainnet-fork'):
 
     zero_address = "0x0000000000000000000000000000000000000000"
     url = "https://exampleURL.com"
+    from .logger import DictLogger
+    globals()["logger"] = DictLogger("logs")
 
     from .accounts import Accounts
     globals()["Accounts"] = Accounts()

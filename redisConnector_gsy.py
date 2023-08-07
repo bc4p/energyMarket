@@ -22,6 +22,7 @@ for account in ACCOUNTS:
     account_assets = ACCOUNTS[account]
     eth_account = b4p.Accounts.new(account)
     eth_account.fundEURS()
+    
     b4p.SoulBound.createIdentity(eth_account, "name")
     for asset in account_assets:
         b4p.ProducingAssets.new(asset, eth_account, "main")
@@ -128,17 +129,16 @@ def handle_market_event(event):
     trade_price = trade["trade_price"]
     rate = trade_price/traded_energy
 
-    print
+    
 
     producing_asset = b4p.ProducingAssets[seller_id]
     consuming_asset = b4p.ConsumingAssets[buyer_id]
     print(f"producing asset: {producing_asset}")
     print(f"consuming_asset: {consuming_asset}")
 
-    consuming_asset.createBid(price, energy, trade_id)
-    producing_asset.acceptBid(price, energy, trade_id)
-    
-
+    consuming_asset.createBid(price, energy, trade_id,)
+    producing_asset.acceptBid(price, energy, trade_id, seller_id, buyer_id)
+    b4p.logger.log_dictionary({"seller_id":seller_id, "buyer_id":buyer_id, "traded_energy":traded_energy, "traded_price":trade_price, "traded_rate":rate, "bid_id":offer_bid_id}, "trades")
 
 ## OTHER
 def handle_all(event):
