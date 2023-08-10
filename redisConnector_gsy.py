@@ -3,13 +3,29 @@ import json
 import b4p
 import ast
 
-
 ACCOUNTS = {
-    "account1":["asset1"],
-    "account2":["asset2"],
-    "account3":["liege"],
-    "account4":["marketMaker"],
-    "account5":["grid"]
+    "account1":["B04"],
+    "account2":["B05a", "B06"],
+    "account3":["B08"],
+    "account4":["B09"],
+    "account5":["B10"],
+    "account6":["B11"],
+    "account7":["B13"],
+    "account8":["B15"],
+    "account9":["B17"],
+    "account10":["B21"],
+    "account11":["B22"],
+    "account12":["B23"],
+    "account13":["B28"],
+    "account14":["B31"],
+    "account15":["B34"],
+    "account16":["B36"],
+    "account17":["B41"],
+    "account18":["B42"],
+    "account19":["B52"],
+    "account20":["B529"],
+    "account21":["Market Maker"],
+    "account22":["Liege"]
 }
 
 if not b4p.started():
@@ -29,7 +45,7 @@ for account in ACCOUNTS:
         b4p.ConsumingAssets.new(asset, eth_account, "main")
         print(f"retreiving assets for {eth_account}:\n")
         print(b4p.SoulBound.assets(eth_account.address))
-
+    
 
 
 

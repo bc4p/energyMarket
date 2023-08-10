@@ -24,7 +24,6 @@ class Accounts():
         return self.accounts
 
     def new(self, name, account=None, with_funding=True, password="no_password"):
-        from . import EursToken
         if(account == None):
             self.accounts[name] = Account(accounts.add(),name)
         else:
@@ -70,7 +69,7 @@ class Account():
     def fundEURS(self):
         from . import Accounts
         from . import EursToken
-        EursToken.transfer(self.address, 5000*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
+        EursToken.transfer(self.address, 500000*(10**EursToken.decimals()), {"from":Accounts["eurs_admin"]})
 
     def balanceEnergyToken(self):
         from . import EnergyToken
