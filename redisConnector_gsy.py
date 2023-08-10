@@ -2,6 +2,7 @@ import redis
 import json
 import b4p
 import ast
+import time
 
 ACCOUNTS = {
     "account1":["B04"],
@@ -154,7 +155,7 @@ def handle_market_event(event):
 
     consuming_asset.createBid(price, energy, trade_id,)
     producing_asset.acceptBid(price, energy, trade_id, seller_id, buyer_id)
-    b4p.logger.log_dictionary({"seller_id":seller_id, "buyer_id":buyer_id, "traded_energy":traded_energy, "traded_price":trade_price, "traded_rate":rate, "bid_id":offer_bid_id}, "trades")
+    b4p.logger.log_dictionary({"seller_id":seller_id, "buyer_id":buyer_id, "traded_energy":traded_energy, "traded_price":trade_price, "traded_rate":rate, "bid_id":offer_bid_id, "timestamp":time.time()}, "trades")
 
 ## OTHER
 def handle_all(event):

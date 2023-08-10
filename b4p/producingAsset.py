@@ -1,6 +1,6 @@
 from . import p, EursToken,EnergyToken, Accounts
 from b4p.utils import print_transaction_events
-
+import time
 class ProducingAssets():
     def __init__(self):
         self.producingAssetContract = p.ProducingAsset
@@ -74,8 +74,8 @@ class ProducingAsset():
         balanceEnergyOwner = EnergyToken.totalBalance(onwerAddress)
         balanceEnergyReceiver = EnergyToken.totalBalance(bidAssetAddress)
 
-        b4p.logger.log_dictionary({"EUR":eursBalanceBidder, "ENERGY":balanceEnergyReceiver}, f"{buyer_id}_BALANCE")
-        b4p.logger.log_dictionary({"EUR":balanceOwner, "ENERGY":balanceEnergyOwner}, f"{seller_id}_BALANCE")
+        b4p.logger.log_dictionary({"EUR":eursBalanceBidder, "ENERGY":balanceEnergyReceiver, "timestamp":time.time()}, f"{buyer_id}_BALANCE")
+        b4p.logger.log_dictionary({"EUR":balanceOwner, "ENERGY":balanceEnergyOwner, "timestamp":time.time()}, f"{seller_id}_BALANCE")
         print(bidAssetAddress)
 
         print("\nBEFORE TRANSACTION\n")
